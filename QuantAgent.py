@@ -17,6 +17,7 @@ import mimetypes
 import os
 import shutil
 from typing import Optional
+from dotenv import load_dotenv
 
 from smolagents.agent_types import (
     AgentAudio,
@@ -626,18 +627,37 @@ class QuantGradioUI:
                 return f"初始化失败: {str(e)}"
         return "Agent已经初始化"
 
+    @classmethod
+    def from_env(cls):
+        """
+        从.env文件创建QuantGradioUI实例
+        """
+        load_dotenv()  # 加载.env文件
+        
+        model_id = os.getenv('MODEL_ID', 'qwen-max')
+        api_base = os.getenv('API_BASE', 'https://dashscope.aliyuncs.com/compatible-mode/v1')
+        api_key = os.getenv('API_KEY', '')
+        tushare_token = os.getenv('TUSHARE_TOKEN', '')
+        
+        # 从环境变量获取启用的工具列表
+        enabled_tools_str = os.getenv('ENABLED_TOOLS', '')
+        enabled_tools = [tool.strip() for tool in enabled_tools_str.split(',') if tool.strip()]
+        
+        # 获取文件上传文件夹配置
+        file_upload_folder = os.getenv('FILE_UPLOAD_FOLDER')
+        
+        return cls(
+            model_id=model_id,
+            api_base=api_base,
+            api_key=api_key,
+            tushare_token=tushare_token,
+            enabled_tools=enabled_tools,
+            file_upload_folder=file_upload_folder
+        )
+
 
 # 替换原来的GradioUI调用
 if __name__ == "__main__":
-    ui = QuantGradioUI(
-        model_id="qwen-max",
-        api_base="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key="sk-c99d24c4c9b8430a9cf75348a502bea5",  # 在这里填入你的API key
-        tushare_token="ae45ea2d09d097f2045527c30298c3ec1ea3ae62ae5e57038dfd1d9b",  # 在这里填入你的Tushare token
-        enabled_tools=[
-            "get_tushare_daily_bar",
-            "get_stock_basic",
-            "backtesting_py_tool",
-        ],
-    )
+    # 从.env文件创建UI实例
+    ui = QuantGradioUI.from_env()
     ui.launch()

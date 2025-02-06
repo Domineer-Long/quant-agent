@@ -9,18 +9,40 @@
 - 提供友好的 Web 界面
 - 支持多种量化分析工具
 - 支持 OpenTelemetry 监控
+- 支持通过.env文件进行配置
 
 ## 快速开始
 
+1. 克隆项目到本地
+2. 复制`.env.example`文件为`.env`并填写配置：
+   ```
+   # 模型配置
+   MODEL_ID=qwen-max
+   API_BASE=https://dashscope.aliyuncs.com/compatible-mode/v1
+   API_KEY=your_api_key_here
+
+   # Tushare配置
+   TUSHARE_TOKEN=your_tushare_token_here
+
+   # 启用的工具（用逗号分隔）
+   ENABLED_TOOLS=get_tushare_daily_bar,get_stock_basic,backtesting_py_tool
+
+   # 文件上传配置（可选）
+   FILE_UPLOAD_FOLDER=uploads
+   ```
+3. 安装依赖：`pip install -r requirements.txt`
+4. 运行程序：`python QuantAgent.py`
 
 ## 配置说明
 
-在运行程序前，需要设置以下配置：
+系统支持通过.env文件进行配置，主要配置项包括：
 
-- `model_id`: 使用的模型ID（如 qwen-max）
-- `api_base`: API基础URL
-- `api_key`: API密钥
-- `tushare_token`: Tushare的访问令牌
+- `MODEL_ID`: 使用的模型ID（如 qwen-max）
+- `API_BASE`: API基础URL
+- `API_KEY`: API密钥
+- `TUSHARE_TOKEN`: Tushare的访问令牌
+- `ENABLED_TOOLS`: 启用的工具列表，用逗号分隔
+- `FILE_UPLOAD_FOLDER`: 文件上传目录（可选）
 
 ## 可用工具
 
@@ -36,7 +58,8 @@
 
 ## 注意事项
 
-- 请确保在使用前正确配置 API 密钥和 Tushare token
+- 请确保在使用前正确配置.env文件
+- 敏感信息（如API密钥）应该只保存在.env文件中，不要提交到版本控制系统
 - 回测时请注意数据的时间范围和质量
 - 建议在虚拟环境中运行项目
 
