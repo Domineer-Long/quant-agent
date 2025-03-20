@@ -1,4 +1,4 @@
-smolagents>=0.0.14
+smolagents>=0.0.14,<1.8.0
 gradio>=4.0.0
 tushare>=1.2.89
 pandas>=2.0.0
